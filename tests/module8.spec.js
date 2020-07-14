@@ -80,7 +80,7 @@ describe('Module 8', () => {
         if (
           nodeType === 'CallExpression' &&
           _.get(node, 'callee.object.callee.object.callee.name', '') ===
-            'getBooksAndMoviesAsync'
+          'getBooksAndMoviesAsync'
         ) {
           parent.node = node;
         }
@@ -137,53 +137,53 @@ describe('Module 8', () => {
     }
   });
 
-  it('should return a rejected promise in `getBooksOrMoviesAsync()` @return-a-rejected-promise', () => {
-    if (checkFileExists('index')) {
-      let file = fs.readFileSync(
-        path.join(process.cwd(), 'src/index.js'),
-        'utf8',
-      );
-      const res = acorn.parse(file, { sourceType: 'module' });
-      const parent = {};
-      const func = {};
-      walk.simple(res, {
-        FunctionDeclaration(node) {
-          if (_.get(node, 'id.name', '') === 'getBooksOrMoviesAsync') {
-            func.node = node;
-          }
-        },
-        VariableDeclaration(node) {
-          if (
-            _.get(node, 'declarations[0].id.name', '') ===
-            'getBooksOrMoviesAsync'
-          ) {
-            console.dir(node, dirOpts);
-            func.node = node;
-          }
-        },
-      });
+  // it('should return a rejected promise in `getBooksOrMoviesAsync()` @return-a-rejected-promise', () => {
+  //   if (checkFileExists('index')) {
+  //     let file = fs.readFileSync(
+  //       path.join(process.cwd(), 'src/index.js'),
+  //       'utf8',
+  //     );
+  //     const res = acorn.parse(file, { sourceType: 'module' });
+  //     const parent = {};
+  //     const func = {};
+  //     walk.simple(res, {
+  //       FunctionDeclaration(node) {
+  //         if (_.get(node, 'id.name', '') === 'getBooksOrMoviesAsync') {
+  //           func.node = node;
+  //         }
+  //       },
+  //       VariableDeclaration(node) {
+  //         if (
+  //           _.get(node, 'declarations[0].id.name', '') ===
+  //           'getBooksOrMoviesAsync'
+  //         ) {
+  //           console.dir(node, dirOpts);
+  //           func.node = node;
+  //         }
+  //       },
+  //     });
 
-      const tryBlocks = [];
-      walk.simple(func.node, {
-        TryStatement(node) {
-          tryBlocks.push(node);
-        },
-        ArrayExpression(node) {
-          if (
-            _.get(node, 'elements[0].callee.name', '') === 'asyncFetchBookss'
-          ) {
-            console.dir(node, dirOpts);
-            func.misspelledFunction = node;
-          }
-        },
-      });
+  //     const tryBlocks = [];
+  //     walk.simple(func.node, {
+  //       TryStatement(node) {
+  //         tryBlocks.push(node);
+  //       },
+  //       ArrayExpression(node) {
+  //         if (
+  //           _.get(node, 'elements[0].callee.name', '') === 'asyncFetchBookss'
+  //         ) {
+  //           console.dir(node, dirOpts);
+  //           func.misspelledFunction = node;
+  //         }
+  //       },
+  //     });
 
-      expect(tryBlocks.length).to.equal(
-        0,
-        'You must remove the `try/catch` block from `getBooksOrMoviesAsync()`.',
-      );
+  //     expect(tryBlocks.length).to.equal(
+  //       0,
+  //       'You must remove the `try/catch` block from `getBooksOrMoviesAsync()`.',
+  //     );
 
-      expect(func.misspelledFunction).to.not.be.undefined;
-    }
-  });
+  //     expect(func.misspelledFunction).to.not.be.undefined;
+  //   }
+  // });
 });
