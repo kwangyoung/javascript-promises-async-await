@@ -580,56 +580,56 @@ describe('Module 7', () => {
     }
   });
 
-  it('should log the results of getBooksOrMovies @exec-getbooksoromovies-log', () => {
-    if (checkFileExists('index')) {
-      let file = fs.readFileSync(
-        path.join(process.cwd(), 'src/index.js'),
-        'utf8',
-      );
-      const res = acorn.parse(file, { sourceType: 'module' });
+  // it('should log the results of getBooksOrMovies @exec-getbooksoromovies-log', () => {
+  //   if (checkFileExists('index')) {
+  //     let file = fs.readFileSync(
+  //       path.join(process.cwd(), 'src/index.js'),
+  //       'utf8',
+  //     );
+  //     const res = acorn.parse(file, { sourceType: 'module' });
 
-      const parent = {};
-      const func = {};
+  //     const parent = {};
+  //     const func = {};
 
-      walk.findNodeAt(res, null, null, (nodeType, node) => {
-        if (
-          nodeType === 'CallExpression' &&
-          _.get(node, 'callee.object.callee.object.callee.name', '') ===
-            'getBooksOrMoviesAsync'
-        ) {
-          parent.node = node;
-        }
-      });
+  //     walk.findNodeAt(res, null, null, (nodeType, node) => {
+  //       if (
+  //         nodeType === 'CallExpression' &&
+  //         _.get(node, 'callee.object.callee.object.callee.name', '') ===
+  //           'getBooksOrMoviesAsync'
+  //       ) {
+  //         parent.node = node;
+  //       }
+  //     });
 
-      walk.ancestor(parent.node, {
-        ArrowFunctionExpression(node, ancestors) {
-          // ancestors.map(val => console.dir(val, { depth: 8 }));
-          if (_.get(node, 'params[0].name', '') === 'results') {
-            func.raceThenNode = node;
-          }
-        },
-      });
+  //     walk.ancestor(parent.node, {
+  //       ArrowFunctionExpression(node, ancestors) {
+  //         // ancestors.map(val => console.dir(val, { depth: 8 }));
+  //         if (_.get(node, 'params[0].name', '') === 'results') {
+  //           func.raceThenNode = node;
+  //         }
+  //       },
+  //     });
 
-      walk.simple(func.raceThenNode, {
-        CallExpression(node) {
-          func.raceThenBody = node;
-        },
-      });
+  //     walk.simple(func.raceThenNode, {
+  //       CallExpression(node) {
+  //         func.raceThenBody = node;
+  //       },
+  //     });
 
-      // Using console.log
-      expect(_.get(func.raceThenBody, 'callee.object.name', '')).to.equal(
-        'console',
-        'Make sure to use the `console` object for logging',
-      );
-      expect(_.get(func.raceThenBody, 'callee.property.name', '')).to.equal(
-        'log',
-        'Make sure to use the `log()` method on the `console` object',
-      );
+  //     // Using console.log
+  //     expect(_.get(func.raceThenBody, 'callee.object.name', '')).to.equal(
+  //       'console',
+  //       'Make sure to use the `console` object for logging',
+  //     );
+  //     expect(_.get(func.raceThenBody, 'callee.property.name', '')).to.equal(
+  //       'log',
+  //       'Make sure to use the `log()` method on the `console` object',
+  //     );
 
-      // logging the correct message
-      expect(
-        _.get(func.raceThenBody, 'arguments[1].properties[0].key.name', ''),
-      ).to.equal('results', 'You should log `results` in an object.');
-    }
-  });
+  //     // logging the correct message
+  //     expect(
+  //       _.get(func.raceThenBody, 'arguments[1].properties[0].key.name', ''),
+  //     ).to.equal('results', 'You should log `results` in an object.');
+  //   }
+  // });
 });
